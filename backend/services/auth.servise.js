@@ -11,10 +11,10 @@ import UserDto from "../dtos/user.dto.js";
 import ApiError from "../exceptions/api.error.js";
 
 // REGISTER SERVICE
-export const registerService = async (email, password) => {
+export const registerService = async (name, email, password) => {
   const candidate = await User.findOne({ email });
   if (candidate) {
-    throw new ApiError.BadRequest(`User with email ${email} already exist.`);
+    throw ApiError.BadRequest(`User with email ${email} already exist.`);
   }
   const hashPassword = await bcrypt.hash(password, 10);
 
@@ -44,7 +44,7 @@ export const loginService = async (email, password) => {
 
   const isPasswordEquals = await bcrypt.compare(password, user.password);
   if (!isPasswordEquals) {
-    throw new ApiError.BadRequest("Invalid password.");
+    throw ApiError.BadRequest("Invalid password.");
   }
 
   const userDto = new UserDto(user);
@@ -65,13 +65,13 @@ export const logoutService = async (refreshToken) => {
 
 export const refreshService = async (refreshToken) => {
   if (!refreshToken) {
-    throw new ApiError.UnauthorizedError();
+    throw ApiError.UnauthorizedError();
   }
 
   const userData = validateRefreshToken(refreshToken);
   const tokenFromDb = await findToken(refreshToken);
   if (!userData || !tokenFromDb) {
-    throw new ApiError.UnauthorizedError();
+    throw ApiError.UnauthorizedError();
   }
 
   const user = await User.findById(userData.id);

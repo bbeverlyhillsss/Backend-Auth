@@ -1,4 +1,4 @@
-import jwt from "jwonwebtoken";
+import jwt from "jsonwebtoken";
 import Token from "../models/toke.model.js";
 
 // GENERATE TOKENS
